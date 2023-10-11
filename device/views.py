@@ -25,10 +25,5 @@ def device_add(request):
 
 @require_http_methods(['GET'])
 def device_get(request, deviceId):
-    try:
-        device = get_object_or_404(models.Device, pk=f"/devices/{deviceId}")
-        return JsonResponse(model_to_dict(device), safe=False)
-    except Exception as e:
-        # log (e)
-        print(e)
-        return HttpResponseServerError()
+    device = get_object_or_404(models.Device, pk=f"/devices/{deviceId}")
+    return JsonResponse(model_to_dict(device), safe=False)
