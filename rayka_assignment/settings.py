@@ -72,7 +72,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DYNAMODB_TABLE = os.getenv('DYNAMODB_TABLE', None)
+DYNAMODB_TABLE = 'rayka'
 
 #######
 # AWS #
@@ -80,7 +80,7 @@ DYNAMODB_TABLE = os.getenv('DYNAMODB_TABLE', None)
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', None)
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', None)
-AWS_REGION_NAME = os.getenv('AWS_REGION_NAME', None)
+AWS_REGION_NAME = os.getenv('AWS_REGION_NAME', 'eu-north-1')
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

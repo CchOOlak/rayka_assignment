@@ -15,25 +15,13 @@ custom:
 
 provider:
   name: aws
+  role: arn:aws:iam::255248854465:role/Hossein.Mzfr
+  profile: rayka
   runtime: python3.11
   region: eu-north-1
-  environment:
-    DYNAMODB_TABLE: "${self:service}-devices"
-  iam:
-    role:
-      statements:
-        - Effect: Allow
-          Action:
-            - s3:GetObject
-            - s3:PutObject
-          Resource: "arn:aws:s3:::*"
-        - Effect: Allow
-          Action:
-            - dynamodb:Query
-            - dynamodb:Scan
-            - dynamodb:GetItem
-            - dynamodb:PutItem
-          Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+  deploymentBucket:
+    name: hamidraykadeployment
+  lambdaHashingVersion: 20201221
 
 functions:
   app:
@@ -41,21 +29,15 @@ functions:
     events:
       - http: ANY /
 
-resources:
-  Resources:
-    DeviceDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          -
-            AttributeName: id
-            AttributeType: S
-        KeySchema:
-          -
-            AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+package:
+  individually:
+    true
+  exclude:
+    - .env
+    - .git/**
+    - .github/**
+    - .serverless/**
+    - static/**
+    - .cache/**
+    - .pytest_cache/**
+    - node_modules/**
