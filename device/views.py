@@ -1,29 +1,35 @@
 import json
-from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseServerError
-from django.forms.models import model_to_dict
-from django.core import serializers
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseNotFound
 
-from device import forms, models
+from device import forms, models, repository
+
+deviceRepo = repository.DeviceDynamoRepo()
 
 @csrf_exempt
 @require_http_methods(['POST'])
 def device_add(request):
     body = json.loads(request.body)
-    payload = forms.DeviceForm(body or None)
-    if payload.is_valid():
+    dataForm = forms.DeviceAddForm(body or None)
+    if dataForm.is_valid():
         try:
-            payload.save()
+            dataForm.save(deviceRepo)
             return HttpResponse(status=201)
         except Exception as e:
             # log (e)
+            print(e)
             return HttpResponseServerError()
     return HttpResponseBadRequest()
 
 
 @require_http_methods(['GET'])
 def device_get(request, deviceId):
-    device = get_object_or_404(models.Device, pk=f"/devices/{deviceId}")
-    return JsonResponse(model_to_dict(device), safe=False)
+    try:
+        device = deviceRepo.get(f"/devices/{deviceId}")
+        if device:
+            return JsonResponse(device, safe=False)
+        return HttpResponseNotFound()
+    except Exception as e:
+        print(e)
+        return HttpResponseServerError()

@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from device.models import Device
-from device.forms import DeviceForm
+from device.forms import DeviceAddForm
 
 class DeviceTest(TestCase):
     def __init__(self, *args, **kwargs):
@@ -33,18 +33,18 @@ class DeviceTest(TestCase):
         self.device_id_invalid_not_found = 'id12'            
 
     def create_device(self, device):
-        payload = DeviceForm(device)
+        payload = DeviceAddForm(device)
         if payload.is_valid():
             payload.save()
         # print(f"create device problem: {payload.errors}\n")
     
     # Forms
-    def test_device_form_valid(self):
-        payload = DeviceForm(self.device_data_valid)
+    def test_device_add_form_valid(self):
+        payload = DeviceAddForm(self.device_data_valid)
         self.assertTrue(payload.is_valid())
 
-    def test_device_form_invalid(self):
-        payload = DeviceForm(self.device_data_invalid_null)
+    def test_device_add_form_invalid(self):
+        payload = DeviceAddForm(self.device_data_invalid_null)
         self.assertFalse(payload.is_valid())
 
     # Models
