@@ -3,10 +3,12 @@ from django.urls import reverse
 
 from device.models import Device
 from device.forms import DeviceAddForm
+from device.repository import DeviceMockRepo
 
 class DeviceTest(TestCase):
     def __init__(self, *args, **kwargs):
         super(TestCase, self).__init__(*args, **kwargs)
+        self.deviceRepo = DeviceMockRepo()
         self.device_data_valid = {
             "id": "/devices/id1",
             "deviceModel": "/devicemodels/id1",
@@ -35,8 +37,10 @@ class DeviceTest(TestCase):
     def create_device(self, device):
         payload = DeviceAddForm(device)
         if payload.is_valid():
-            payload.save()
+            payload.save(self.deviceRepo)
         # print(f"create device problem: {payload.errors}\n")
+    def get_device(self, id):
+        return self.deviceRepo.get(id)
     
     # Forms
     def test_device_add_form_valid(self):
@@ -47,11 +51,11 @@ class DeviceTest(TestCase):
         payload = DeviceAddForm(self.device_data_invalid_null)
         self.assertFalse(payload.is_valid())
 
-    # Models
+    # Repo
     def test_device_model_device_create(self):
         self.create_device(self.device_data_valid)
-        device = Device.objects.first()
-        self.assertTrue(isinstance(device, Device))
+        device = self.deviceRepo.get(self.device_id_valid)
+        self.assertDictEqual(device, self.device_data_valid)
 
     # Views
     def test_device_view_device_add_success(self):

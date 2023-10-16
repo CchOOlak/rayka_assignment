@@ -3,9 +3,13 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseNotFound
 
+from rayka_assignment import settings
 from device import forms, models, repository
 
-deviceRepo = repository.DeviceDynamoRepo()
+if settings.DEBUG:
+    deviceRepo = repository.DeviceMockRepo()
+else:
+    deviceRepo = repository.DeviceDynamoRepo()
 
 @csrf_exempt
 @require_http_methods(['POST'])

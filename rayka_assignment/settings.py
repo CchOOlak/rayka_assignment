@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)38+psxqn3u)k4lil+j*h+fhk^qpp)^94%m^yw4*9!r$uttpb2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', True)
 
 ALLOWED_HOSTS = ['*']
 
@@ -72,6 +72,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+DYNAMODB_TABLE = os.getenv('DYNAMODB_TABLE', None)
 
 #######
 # AWS #

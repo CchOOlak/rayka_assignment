@@ -18,7 +18,7 @@ class DeviceDynamoRepo(AbstractRepo):
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
             region_name=settings.AWS_REGION_NAME,
-        ).Table('hamid_assignment_devices')
+        ).Table(settings.DYNAMODB_TABLE)
 
     def get(self, id):
         response = self._table.get_item(
@@ -32,3 +32,15 @@ class DeviceDynamoRepo(AbstractRepo):
     
     def add(self, data):
         self._table.put_item(Item=data)
+
+
+class DeviceMockRepo(AbstractRepo):
+    def __init__(self):
+        self.devices = {}
+    
+    def get(self, id):
+        return self.devices.get('id', None)
+
+    def add(self, data):
+        device_id = data['id']
+        self.devices[device_id] = data
