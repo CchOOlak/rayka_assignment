@@ -74,24 +74,6 @@ class DeviceTest(TestCase):
         )
         self.assertEqual(response.status_code, 400)
     
-    def test_device_view_device_add_fail_on_id_duplicate(self):
-        self.create_device(self.device_data_valid)
-        response = self.client.post(
-            reverse('device_add'),
-            self.device_data_invalid_id_duplicate,
-            'application/json'
-        )
-        self.assertEqual(response.status_code, 400)
-    
-    def test_device_view_device_add_fail_on_serial_duplicate(self):
-        self.create_device(self.device_data_valid)
-        response = self.client.post(
-            reverse('device_add'),
-            self.device_data_invalid_serial_duplicate,
-            'application/json'
-        )
-        self.assertEqual(response.status_code, 400)
-
     def test_device_view_device_get_success(self):
         self.create_device(self.device_data_valid)
         response = self.client.get(

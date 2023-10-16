@@ -35,12 +35,7 @@ sls deploy
 ```
 
 ### local
-First run migrations:
-```
-./manage.py makemigrations
-./manage.py migrate
-```
-Then run:
+First make sure about AWS credentials, then:
 ```
 ./manage.py runserver localhost:8000
 ```

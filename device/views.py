@@ -6,19 +6,15 @@ from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, Http
 from rayka_assignment import settings
 from device import forms, models, repository
 
-if settings.DEBUG:
-    deviceRepo = repository.DeviceMockRepo()
-else:
-    deviceRepo = repository.DeviceDynamoRepo()
-
 @csrf_exempt
 @require_http_methods(['POST'])
 def device_add(request):
+    repo = repository.getRepo()
     body = json.loads(request.body)
     dataForm = forms.DeviceAddForm(body or None)
     if dataForm.is_valid():
         try:
-            dataForm.save(deviceRepo)
+            dataForm.save(repo)
             return HttpResponse(status=201)
         except Exception as e:
             # log (e)
@@ -29,8 +25,9 @@ def device_add(request):
 
 @require_http_methods(['GET'])
 def device_get(request, deviceId):
+    repo = repository.getRepo()
     try:
-        device = deviceRepo.get(f"/devices/{deviceId}")
+        device = repo.get(f"/devices/{deviceId}")
         if device:
             return JsonResponse(device, safe=False)
         return HttpResponseNotFound()

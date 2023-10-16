@@ -21,13 +21,12 @@ provider:
   region: eu-north-1
   deploymentBucket:
     name: hamidraykadeployment
-  lambdaHashingVersion: 20201221
 
 functions:
-  app:
-    handler: wsgi_handler.handler
-    events:
-      - http: ANY /
+  - app:
+      handler: wsgi_handler.handler
+      events:
+        - http: ANY /
 
 package:
   individually:

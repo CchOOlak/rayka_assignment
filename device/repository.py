@@ -24,6 +24,7 @@ class DeviceDynamoRepo(AbstractRepo):
         response = self._table.get_item(
             Key={'id': id}
         )
+        print(response)
         if "Item" not in response:
             return None
 
@@ -44,3 +45,9 @@ class DeviceMockRepo(AbstractRepo):
     def add(self, data):
         device_id = data['id']
         self.devices[device_id] = data
+
+def getRepo():
+    if settings.DEBUG == True:
+        return DeviceMockRepo()
+    else:
+        return DeviceDynamoRepo()
