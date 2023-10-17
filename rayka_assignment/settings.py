@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)38+psxqn3u)k4lil+j*h+fhk^qpp)^94%m^yw4*9!r$uttpb2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', True)
+DEBUG = os.getenv('DEBUG', False)
 
 ALLOWED_HOSTS = ['*']
 
@@ -72,7 +72,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DYNAMODB_TABLE = 'rayka'
+DYNAMODB_TABLE = 'hamid_raykasoft'
 
 #######
 # AWS #
@@ -80,7 +80,7 @@ DYNAMODB_TABLE = 'rayka'
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', None)
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', None)
-AWS_REGION_NAME = os.getenv('AWS_REGION_NAME', 'eu-north-1')
+AWS_REGION_NAME = os.getenv('AWS_REGION_NAME', 'us-west-2')
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

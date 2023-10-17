@@ -54,7 +54,7 @@ class DeviceTest(TestCase):
     # Repo
     def test_device_model_device_create(self):
         self.create_device(self.device_data_valid)
-        device = self.deviceRepo.get(self.device_id_valid)
+        device = self.deviceRepo.get(self.device_data_valid['id'])
         self.assertDictEqual(device, self.device_data_valid)
 
     # Views

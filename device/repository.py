@@ -13,18 +13,12 @@ class AbstractRepo(ABC):
 
 class DeviceDynamoRepo(AbstractRepo):
     def __init__(self):
-        self._table = boto3.resource(
-            'dynamodb',
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name=settings.AWS_REGION_NAME,
-        ).Table(settings.DYNAMODB_TABLE)
+        self._table = boto3.resource('dynamodb').Table(settings.DYNAMODB_TABLE)
 
     def get(self, id):
         response = self._table.get_item(
             Key={'id': id}
         )
-        print(response)
         if "Item" not in response:
             return None
 
@@ -40,7 +34,7 @@ class DeviceMockRepo(AbstractRepo):
         self.devices = {}
     
     def get(self, id):
-        return self.devices.get('id', None)
+        return self.devices.get(id, None)
 
     def add(self, data):
         device_id = data['id']

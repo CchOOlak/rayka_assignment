@@ -15,28 +15,88 @@ custom:
 
 provider:
   name: aws
-  role: arn:aws:iam::255248854465:role/Hossein.Mzfr
+  # role: lambdaRole
+  iam:
+    role: lambdaRole
   profile: rayka
   runtime: python3.11
-  region: eu-north-1
+  region: us-west-2
   deploymentBucket:
-    name: hamidraykadeployment
+    name: danial-eshghi-raykasoft-serverlessdeploymentbuck-1qrdy1e12lwuy
+  apiGateway:
+    shouldStartNameWithService: true
 
 functions:
   - app:
       handler: wsgi_handler.handler
       events:
-        - http: ANY /
+        - http:
+            path: /api/devices/
+            method: POST
+            cors: true
+        - http:
+            path: /api/devices/{deviceId}/
+            method: GET
+            cors: true
+
+resources:
+  Resources:
+    lambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        RoleName: hamid-raykasoft-challenge-lambdaRole
+        Policies:
+          - PolicyName: ReadMassivelyUpdateFunctionPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: arn:aws:logs:*:*:*
+                - Effect: Allow
+                  Action:
+                    - dynamodb:*
+                    - sqs:ReceiveMessage
+                    - sqs:GetQueueAttributes
+                    - sqs:ChangeMessageVisibility
+                    - sqs:DeleteMessage
+                    - sqs:SendMessage
+                  Resource: "*"
+    deviceTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: hamid_raykasoft
 
 package:
-  individually:
-    true
-  exclude:
-    - .env
-    - .git/**
-    - .github/**
-    - .serverless/**
-    - static/**
-    - .cache/**
-    - .pytest_cache/**
-    - node_modules/**
+  individually: true
+  patterns:
+    - '!.env'
+    - '!.git/**'
+    - '!.github/**'
+    - '!.serverless/**'
+    - '!static/**'
+    - '!.cache/**'
+    - '!.pytest_cache/**'
+    - '!node_modules/**'
